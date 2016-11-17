@@ -1,16 +1,16 @@
 Dear #speakername#,
 
-We are pleased to inform you that your #talkType#, "#title#", has been accepted for JavaZone 2016!
+We are pleased to inform you that your #talkType#, "#title#", has been accepted for Trondheim Developer Conference 2017!
 
 
 CONFIRM YOUR TALK
 -----------------------------------
 
-Please use the link below to confirm that you will be attending JavaZone and giving your #talkType#.
+Please use the link below to confirm that you will be attending Trondheim Developer Conference and giving your #talkType#.
 
 #confirmLink#
 
-Please confirm as soon as possible! If you know that you unable to attend, please inform us by sending a reply to this email.
+Remember to confirm as soon as possible! If you know that you unable to attend, please inform us by sending a reply to this email.
 
 Note that this #talkType# is accepted based upon both content and presenter. We do not accept substitute speakers.
 
@@ -18,7 +18,8 @@ Note that this #talkType# is accepted based upon both content and presenter. We 
 UPDATING YOUR TALK
 -----------------------------------
 
-Once you have confirmed that you are attending, we will publish your #talkType# in the agenda at http://2016.javazone.no. You can continue to edit your abstract and should therefore make sure that the following parts are updated via the below link:
+Once you have confirmed that you are attending, we will publish your #talkType# in the agenda at http://2017.trondheimdc.no.
+You can continue to edit your abstract and should therefore make sure that the following parts are updated via the below link:
 
 1) Be sure to upload a good quality picture or portrait so that people know what you look like!
 2) Tag your abstract with the relevant tags - this will make it easier for our attendees to find your #talkType#.
@@ -33,21 +34,19 @@ OTHER PRACTICAL INFORMATION
 -----------------------------------
 
 1) Reimbursements:
-There is a limited budget for reimbursing travelling costs. This e-mail does not automatically make you eligible for reimbursements. Please see https://2016.javazone.no/monetary-policy for information about how you can apply for these.
+There is a very limited budget for reimbursing travelling costs. This e-mail does not automatically make you eligible for reimbursements. Please see http://2017.trondheimdc.no/monetarypolicy.html for information about how you can apply for these.
 
 2) Tickets:
-As stated at http://2016.javazone.no/speakers speakers of lightning talks will have to provide for their own admission to JavaZone.
+As stated at http://2017.javazone.no/speakers.html speakers of lightning talks will have to provide for their own admission to Javazone.
 
-3) JourneyZone:
-JourneyZone is open to all speakers and is a fantastic chance to experience the nature of Norway and make new friends! Read more and apply for a spot at JourneyZone here: http://2016.javazone.no/journeyzone
+3) JourneyZone at Svalbard:
+JournneyZone will happen! Read more and apply for a spot at JourneyZone here: http://2015.javazone.no/journeyzone.html
 
-4) Speakers Workshop and Presentation Technique Course:
-Here you'll get a free Presentation Technique Course with Vibeke Holtskog, in addition to all you need to know about speaking at JavaZone! Places are limited, so visit http://www.meetup.com/javaBin/events/228729018 and register today! 
+4) Speakers workshop:
+We'll be running a Speaker Workshop on the 26th August in Oslo. Here you'll get a free course in presentation technique, along with lots of useful practical information about speaking at JavaZone. To register (and for more information about the event) visit http://www.meetup.com/javaBin/events/223393995.
 
-5) Speakers dinner:
-As always we'll be hosting a speakers dinner the evening before JavaZone.  This year we will be eating at Grilleriet, just a short walk from Oslo Spektrum. You can expect more information about this in August.
+For more information, see: http://2015.javazone.no/speakers.html 
 
-For more information see: http://2016.javazone.no/speakers
 
 
 If you have any more questions, reply to this email. Please be aware that the response time on emails during the summer holidays (in July) will be longer than normal.
@@ -56,4 +55,4 @@ If you have any questions regarding the conference, please feel free to contact 
 
 
 Best regards,
-The JavaZone 2016 Program Committee
+The JavaZone 2015 Program Committee
