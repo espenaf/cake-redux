@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.util.Objects.isNull;
+
 public class Configuration {
 
     private Map<String,String> properties = null;
@@ -30,8 +32,15 @@ public class Configuration {
                 throw new IllegalStateException("Properties not initalized getting " +key);
             }
         }
-        return instance.properties.get(key);
+        return instance.properties.computeIfAbsent(key, Configuration::tryEnvAndSysProp);
+    }
 
+    private static String tryEnvAndSysProp(String key) {
+        String property = System.getProperty(key);
+        if(isNull(property)){
+            property = System.getenv(key);
+        }
+        return property;
     }
 
     private synchronized void loadProps() {
