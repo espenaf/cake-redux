@@ -6,7 +6,7 @@
     <groupId>no.javazone</groupId>
     <artifactId>cake-redux</artifactId>
     <name>cake-redux</name>
-    <version>1.0.TDC</version>
+    <version>1.0.SOS</version>
     <packaging>jar</packaging>
 
     <dependencies>
