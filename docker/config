@@ -1,0 +1,13 @@
+emsEventLocation=http://ems-app:8081/server/events
+emsUser=submitit.redux
+emsPassword=EMS password
+noAuthMode=true
+serverPort=8082
+cakeLocation=<Where you run this app>
+googleClientId=<Client id to the google oath service>
+googleClientSecret=<Client secret id to the google oath service>
+googleRedirectUrl=http://localhost:8081/entrance
+authorizedUsers=The name and email of the authorized users. Listed as : John Doe<johndoe@gmail.com>,Jane Doe<janedoe@gmail.com>
+submititLocation=The location where submitit is running (used in submitit link on talk detail page). For example http://localhost:8080/talkDetail.html?talkid=
+smthost=email
+smtpport=25
