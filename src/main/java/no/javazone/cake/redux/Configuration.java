@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 public class Configuration {
 
@@ -54,7 +55,13 @@ public class Configuration {
             if (eqpos == -1) {
                 throw new IllegalArgumentException("Illegal line : " + line);
             }
-            readProps.put(line.substring(0,eqpos),line.substring(eqpos+1));
+            String key = line.substring(0, eqpos);
+            String value = line.substring(eqpos + 1);
+            String valueFromEnv = tryEnvAndSysProp(key);
+            if(nonNull(valueFromEnv)) {
+                value = valueFromEnv;
+            }
+            readProps.put(key, value);
         }
         properties = readProps;
     }
