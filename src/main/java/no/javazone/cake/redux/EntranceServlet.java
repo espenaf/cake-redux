@@ -26,10 +26,10 @@ public class EntranceServlet extends HttpServlet {
         String code = req.getParameter("code");
 
         StringBuilder postParameters = new StringBuilder();
-        postParameters.append(para("code", code) + "&");
-        postParameters.append(para("client_id", Configuration.getGoogleClientId()) + "&");
-        postParameters.append(para("client_secret", Configuration.getGoogleClientSecret()) + "&");
-        postParameters.append(para("redirect_uri", Configuration.getGoogleRedirectUrl()) + "&");
+        postParameters.append(para("code", code)).append("&");
+        postParameters.append(para("client_id", Configuration.getGoogleClientId())).append("&");
+        postParameters.append(para("client_secret", Configuration.getGoogleClientSecret())).append("&");
+        postParameters.append(para("redirect_uri", Configuration.getGoogleRedirectUrl())).append("&");
         postParameters.append(para("grant_type", "authorization_code"));
         URL url = new URL("https://accounts.google.com/o/oauth2/token");
         URLConnection urlConnection = url.openConnection();
@@ -90,7 +90,7 @@ public class EntranceServlet extends HttpServlet {
     public static void writeLoginMessage(HttpServletResponse resp, PrintWriter writer, String userid) {
         resp.setContentType("text/html");
         writer.append("<html><body>");
-        writer.append("<p>You are now logged in as " + userid + "</p>");
+        writer.append("<p>You are now logged in as ").append(userid).append("</p>");
         writer.append("<p><a href='secured/#/'>To cake</a></p>");
         writer.append("</body></html>");
     }
