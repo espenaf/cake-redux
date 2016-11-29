@@ -18,7 +18,7 @@ Note that this #talkType# is accepted based upon both content and presenter. We 
 UPDATING YOUR TALK
 -----------------------------------
 
-Once you have confirmed that you are attending, we will publish your #talkType# in the agenda at http://2017.trondheimdc.no.
+Once you have confirmed that you are attending, we will publish your #talkType# in the agenda at https://2017.trondheimdc.no.
 You can continue to edit your abstract and should therefore make sure that the following parts are updated via the below link:
 
 1) Be sure to upload a good quality picture or portrait so that people know what you look like!
@@ -34,25 +34,22 @@ OTHER PRACTICAL INFORMATION
 -----------------------------------
 
 1) Reimbursements:
-There is a very limited budget for reimbursing travelling costs. This e-mail does not automatically make you eligible for reimbursements. Please see http://2017.trondheimdc.no/monetarypolicy.html for information about how you can apply for these.
+There is a very limited budget for reimbursing travelling costs. This e-mail does not automatically make you eligible for reimbursements. Please see https://2017.trondheimdc.no/monetarypolicy.html for information about how you can apply for these.
 
 2) Tickets:
-As stated at http://2017.javazone.no/speakers.html speakers of lightning talks will have to provide for their own admission to Javazone.
-
-3) JourneyZone at Svalbard:
-JournneyZone will happen! Read more and apply for a spot at JourneyZone here: http://2015.javazone.no/journeyzone.html
+As stated at https://2017.javazone.no/speakers.html speakers of lightning talks will have to provide for their own admission to Javazone.
 
 4) Speakers workshop:
 We'll be running a Speaker Workshop on the 26th August in Oslo. Here you'll get a free course in presentation technique, along with lots of useful practical information about speaking at JavaZone. To register (and for more information about the event) visit http://www.meetup.com/javaBin/events/223393995.
 
-For more information, see: http://2015.javazone.no/speakers.html 
+For more information, see: https://2017.trondheimdc.no/speakers.html
 
 
 
 If you have any more questions, reply to this email. Please be aware that the response time on emails during the summer holidays (in July) will be longer than normal.
 
-If you have any questions regarding the conference, please feel free to contact the Programme Committee at program@java.no.
+If you have any questions regarding the conference, please feel free to contact the Programme Committee at connect@trondheimdc.no.
 
 
 Best regards,
-The JavaZone 2015 Program Committee
+The Trondheim Developer Conference Program Committee
