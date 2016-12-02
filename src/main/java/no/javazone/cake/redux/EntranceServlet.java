@@ -76,7 +76,7 @@ public class EntranceServlet extends HttpServlet {
         userEmail = userInfo.get("email").asText();
 
         String userid = username + "<" + userEmail + ">";
-        if (!Configuration.getAutorizedUsers().contains(userid)) {
+        if (!haveAccess(userEmail)) {
             resp
                     .sendError(HttpServletResponse.SC_FORBIDDEN, "User not registered " + userid);
             return;
