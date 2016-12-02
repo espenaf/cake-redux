@@ -13,6 +13,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static java.util.Arrays.asList;
 
 public class EntranceServlet extends HttpServlet {
     @Override
@@ -75,6 +79,9 @@ public class EntranceServlet extends HttpServlet {
         username = userInfo.get("name").asText();
         userEmail = userInfo.get("email").asText();
 
+        // When using not using G+, name can be blank
+        username = getNameFromConfigIfBlank(username);
+
         String userid = username + "<" + userEmail + ">";
         if (!haveAccess(userEmail)) {
             resp
@@ -83,9 +90,16 @@ public class EntranceServlet extends HttpServlet {
         }
 
         req.getSession().setAttribute("access_token", userid);
-        req.getSession().setAttribute("username",username);
+        req.getSession().setAttribute("username", username);
 
         writeLoginMessage(resp, writer, userid);
+    }
+
+    private String getNameFromConfigIfBlank(String username) {
+        return Stream.of(Configuration.getAutorizedUsers().split(","))
+                .filter(u -> u.contains(username))
+                .map(u -> u.split("<")[0])
+                .findFirst().orElse(username);
     }
 
     private boolean haveAccess(String userid) {
