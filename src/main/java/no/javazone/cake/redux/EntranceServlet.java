@@ -80,7 +80,7 @@ public class EntranceServlet extends HttpServlet {
         userEmail = userInfo.get("email").asText();
 
         // When using not using G+, name can be blank
-        username = getNameFromConfigIfBlank(username);
+        username = getNameFromConfigIfBlank(username, userEmail);
 
         String userid = username + "<" + userEmail + ">";
         if (!haveAccess(userEmail)) {
@@ -95,9 +95,11 @@ public class EntranceServlet extends HttpServlet {
         writeLoginMessage(resp, writer, userid);
     }
 
-    private String getNameFromConfigIfBlank(String username) {
+    private String getNameFromConfigIfBlank(String username, String userEmail) {
+        if(username.length() > 0) return username;
+
         return Stream.of(Configuration.getAutorizedUsers().split(","))
-                .filter(u -> u.contains(username))
+                .filter(u -> u.contains(userEmail))
                 .map(u -> u.split("<")[0])
                 .findFirst().orElse(username);
     }
