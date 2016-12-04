@@ -32,7 +32,7 @@ public class AcceptorSetter {
         String template = loadTemplate();
         String tagToAdd = "accepted";
         String tagExistsErrormessage = "Talk is already accepted";
-        String subjectTemplate = "Javazone 2016 #talkType# accepted";
+        String subjectTemplate = "Trondheim Developer Conference 2017 #talkType# accepted";
 
         return doUpdates(talks, template, subjectTemplate, tagToAdd, tagExistsErrormessage,userAccessType);
     }
@@ -133,8 +133,8 @@ public class AcceptorSetter {
 
     private SimpleEmail setupMailHeader(SimpleEmail mail,String subject) throws EmailException {
         mail.setHostName(Configuration.smtpServer());
-        mail.setFrom("program@java.no", "Javazone program commitee");
-        mail.addBcc("program-auto@java.no");
+        mail.setFrom("connect@trondheimdc.no", "Trondheim Developer Conference program commitee");
+        mail.addBcc("connect@trondheimdc.no");
         mail.setSubject(subject);
 
 
