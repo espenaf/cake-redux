@@ -91,6 +91,7 @@ public class EntranceServlet extends HttpServlet {
 
         req.getSession().setAttribute("access_token", userid);
         req.getSession().setAttribute("username", username);
+        req.getSession().setAttribute("useremail", userEmail);
 
         writeLoginMessage(resp, writer, userid);
     }

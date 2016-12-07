@@ -145,7 +145,9 @@ public class DataServlet extends HttpServlet {
     }
 
     private static UserAccessType computeAccessType(HttpServletRequest request) {
-        return UserAccessType.READ_ONLY;
+        String useremail = (String) request.getSession().getAttribute("useremail");
+        String autorizedUsers = Configuration.getAutorizedUsers();
+        return autorizedUsers.contains(useremail) ? UserAccessType.FULL : UserAccessType.READ_ONLY;
     }
 
     private void acceptTalks(HttpServletRequest req, HttpServletResponse resp) throws IOException {
