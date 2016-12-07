@@ -175,4 +175,15 @@ public class Configuration {
     public static long emailSleepTime() {
         return Long.parseLong(readConf("emailSleepTime","5000"));
     }
+
+    public static String mailFrom() {
+        return readConf("mailFrom", "program@java.no");
+    }
+    public static String mailFromName() {
+        return readConf("mailFromName", "Trondheim Developer Conference program commitee");
+    }
+
+    public static String bcc() {
+        return readConf("bcc", "program-auto@java.no");
+    }
 }

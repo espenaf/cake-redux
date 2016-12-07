@@ -133,14 +133,13 @@ public class AcceptorSetter {
 
     private SimpleEmail setupMailHeader(SimpleEmail mail,String subject) throws EmailException {
         mail.setHostName(Configuration.smtpServer());
-        mail.setFrom("connect@trondheimdc.no", "Trondheim Developer Conference program commitee");
-        mail.addBcc("connect@trondheimdc.no");
+        mail.setFrom(Configuration.mailFrom(), Configuration.mailFromName());
+        mail.addBcc(Configuration.bcc());
         mail.setSubject(subject);
-
 
         if (Configuration.useMailSSL()) {
             mail.setSSLOnConnect(true);
-            mail.setSslSmtpPort("" + Configuration.smtpPort());
+            mail.setSslSmtpPort(String.valueOf(Configuration.smtpPort()));
         } else {
             mail.setSmtpPort(Configuration.smtpPort());
 
