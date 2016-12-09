@@ -2,7 +2,7 @@
 
 cd ..
 mvn install -Dmaven.test.skip
-cp target/cake-redux-1.0.TDC-jar-with-dependencies.jar docker/cake-redux.jar
-docker build -t trondheimdc/cake docker
+cp target/cake-redux-1.0.SOS-jar-with-dependencies.jar docker/cake-redux.jar
+docker build -t soskonf/cake docker
 rm docker/cake-redux.jar
-docker push trondheimdc/cake
+docker push soskonf/cake
