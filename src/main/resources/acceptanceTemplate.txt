@@ -1,58 +1,46 @@
-Dear #speakername#,
-
-We are pleased to inform you that your #talkType#, "#title#", has been accepted for Trondheim Developer Conference 2017!
+Kjære #speakername#,
 
 
-CONFIRM YOUR TALK
+Vi ønsker å informere deg om at din presentasjon, "#title#", har blitt akseptert for Sikkerhet og Sårbarhet 2017!
+
+
+BEKREFTE DIN PRESENTASJON
 -----------------------------------
 
-Please use the link below to confirm that you will be attending Trondheim Developer Conference and giving your #talkType#.
+Benytt linken under for å bekrefte at du kommer til å delta på Sikkerhet og Sårbarhet.
 
 #confirmLink#
 
-Remember to confirm as soon as possible! If you know that you unable to attend, please inform us by sending a reply to this email.
-
-Note that this #talkType# is accepted based upon both content and presenter. We do not accept substitute speakers.
+Vennligst bekrefte så raskt som mulig! Hvis du ikke har mulighet til delta, bare svar på denne e-post.
 
 
-UPDATING YOUR TALK
+REDIGERE DIN PRESENTASJON
 -----------------------------------
 
-Once you have confirmed that you are attending, we will publish your #talkType# in the agenda at http://2017.trondheimdc.no.
-You can continue to edit your abstract and should therefore make sure that the following parts are updated via the below link:
+Du kan fortsette å redigere din presentasjon. F.eks. er det viktig å verifisere at følgende er korrekt:
 
-1) Be sure to upload a good quality picture or portrait so that people know what you look like!
-2) Tag your abstract with the relevant tags - this will make it easier for our attendees to find your #talkType#.
-3) Remember that your abstract, title, bio and photo will be published when you confirm this email, and that any changes you make will also be available right away.
+1) Laste opp en bilde av høy oppløsning, slik at alle kan se hvem du er!
+2) Legge inn relevante stikkord om den presentasjon - gjør det enklere å finne din presentasjon.
+3) Husk at beskrivelse, tittel, bilde og informasjon om deg vil bli lagt ut på nettsidene.
 
-You can update your talk here: 
+Du kan redigere din presentasjon her:
 
 #submititLink#
 
 
-OTHER PRACTICAL INFORMATION
+PRAKTISK INFORMASJON
 -----------------------------------
 
-1) Reimbursements:
-There is a very limited budget for reimbursing travelling costs. This e-mail does not automatically make you eligible for reimbursements. Please see http://2017.trondheimdc.no/monetarypolicy.html for information about how you can apply for these.
+1) Adgang:
+Alle foredragsholdere har fri adgang til konferansen.
 
-2) Tickets:
-As stated at http://2017.javazone.no/speakers.html speakers of lightning talks will have to provide for their own admission to Javazone.
+2) Refusjon:
+Det er begrenset med budsjett for refusjon av reise og opphold. Hvis dette derimot skulle vise seg problematisk for din deltakelse på konferansen, ta kontakt på program@soskonf.no.
 
-3) JourneyZone at Svalbard:
-JournneyZone will happen! Read more and apply for a spot at JourneyZone here: http://2015.javazone.no/journeyzone.html
-
-4) Speakers workshop:
-We'll be running a Speaker Workshop on the 26th August in Oslo. Here you'll get a free course in presentation technique, along with lots of useful practical information about speaking at JavaZone. To register (and for more information about the event) visit http://www.meetup.com/javaBin/events/223393995.
-
-For more information, see: http://2015.javazone.no/speakers.html 
+For mer informasjon, https://soskonf.no
 
 
+Hvis du har flere spørsmål, svar base på denne e-post.
 
-If you have any more questions, reply to this email. Please be aware that the response time on emails during the summer holidays (in July) will be longer than normal.
-
-If you have any questions regarding the conference, please feel free to contact the Programme Committee at program@java.no.
-
-
-Best regards,
-The JavaZone 2015 Program Committee
+Hilsen
+Programkomiteen for Sikkerhet og Sårbarhet 2017

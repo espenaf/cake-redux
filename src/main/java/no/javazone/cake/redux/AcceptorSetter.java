@@ -1,6 +1,5 @@
 package no.javazone.cake.redux;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -25,8 +24,8 @@ public class AcceptorSetter {
     public String accept(ArrayNode talks) {
         String template = loadTemplate();
         String tagToAdd = "accepted";
-        String tagExistsErrormessage = "Talk is already accepted";
-        String subjectTemplate = "Javazone 2015 #talkType# accepted";
+        String tagExistsErrormessage = "Presentasjonen er allerede godtatt";
+        String subjectTemplate = "Sikkerhet og Sårbarhet 2017 #talkType# godtatt";
 
         return doUpdates(talks, template, subjectTemplate, tagToAdd, tagExistsErrormessage);
     }
@@ -129,8 +128,8 @@ public class AcceptorSetter {
 
     private SimpleEmail setupMailHeader(SimpleEmail mail,String subject) throws EmailException {
         mail.setHostName(Configuration.smtpServer());
-        mail.setFrom("program@java.no", "Javazone program commitee");
-        mail.addBcc("program-auto@java.no");
+        mail.setFrom("program@soskonf.no", "Programkomiteen Sikkerhet og Sårbarhet ");
+        //mail.addBcc("program-auto@java.no");
         mail.setSubject(subject);
 
 
