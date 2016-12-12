@@ -17,13 +17,29 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static no.javazone.cake.redux.CommunicatorHelper.openConnection;
+import static no.javazone.cake.redux.CommunicatorHelper.openStream;
+
 public class EmsCommunicator {
 
 
-    public String updateTags(String encodedTalkUrl,List<String> tags,String givenLastModified) {
+    public String updateTags(String encodedTalkUrl,List<String> tags,String givenLastModified,UserAccessType userAccessType) {
+        checkWriteAccess(userAccessType);
         Property newVals = Property.arrayObject("tags", new ArrayList<Object>(tags));
-
         return update(encodedTalkUrl, givenLastModified, Arrays.asList(newVals));
+    }
+
+    private void checkWriteAccess(UserAccessType userAccessType) {
+        if (Configuration.noAuthMode()) {
+            return;
+        }
+        switch (userAccessType) {
+            case FULL:
+            case OPENSERVLET:
+                return;
+            default:
+                throw new NoUserAceessException();
+        }
     }
 
     private String update(String encodedTalkUrl, String givenLastModified, List<Property> newVals) {
@@ -68,7 +84,7 @@ public class EmsCommunicator {
         }
 
         try (InputStream is = putConnection.getInputStream()) {
-            toString(is);
+            CommunicatorHelper.toString(is);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -83,7 +99,8 @@ public class EmsCommunicator {
         return jsonObject.toString();
     }
 
-    public String confirmTalk(String encodedTalkUrl, String dinner) {
+    public String confirmTalk(String encodedTalkUrl, String dinner,UserAccessType userAccessType) {
+        checkWriteAccess(userAccessType);
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonTalk = objectMapper.readTree(fetchOneTalk(encodedTalkUrl));
@@ -105,7 +122,7 @@ public class EmsCommunicator {
             }
             tags.add("confirmed");
             String lastModified = jsonTalk.get("lastModified").asText();
-            updateTags(encodedTalkUrl,tags, lastModified);
+            updateTags(encodedTalkUrl,tags, lastModified,userAccessType);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -114,6 +131,10 @@ public class EmsCommunicator {
     }
 
     public String allEvents()  {
+        return eventJsonNodes().toJson();
+    }
+
+    private JsonArray eventJsonNodes() {
         try {
             URLConnection connection = openConnection(Configuration.emsEventLocation(), false);
             Collection events = new CollectionParser().parse(openStream(connection));
@@ -137,9 +158,9 @@ public class EmsCommunicator {
 
 
             }
+            return eventArray;
 
-            return eventArray.toJson();
-        } catch (IOException  e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -214,22 +235,25 @@ public class EmsCommunicator {
         }
     }
 
-
-    public String fetchOneTalk(String encodedUrl) {
+    public JsonObject oneTalkAsJson(String encodedUrl) {
         String url = Base64Util.decode(encodedUrl);
         URLConnection connection = openConnection(url, true);
 
         try {
             InputStream is = openStream(connection);
             Item talkItem = new CollectionParser().parse(is).getFirstItem().get();
-            JsonObject jsonObject = readTalk(talkItem, connection);
+            JsonObject jsonObject = readTalk(url,talkItem, connection);
             String submititLocation = Configuration.submititLocation() + encodedUrl;
             jsonObject.put("submititLoc",submititLocation);
             jsonObject.put("eventId",eventFromTalk(url));
-            return jsonObject.toJson();
+            return jsonObject;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public String fetchOneTalk(String encodedUrl) {
+        return oneTalkAsJson(encodedUrl).toJson();
     }
 
     private String eventFromTalk(String url) {
@@ -238,18 +262,8 @@ public class EmsCommunicator {
         return Base64Util.encode(eventUrl);
     }
 
-    private InputStream openStream(URLConnection connection) throws IOException {
-        InputStream inputStream = connection.getInputStream();
-        if (true) { // flip for debug :)
-            return inputStream;
-        }
-        String stream = toString(inputStream);
-        System.out.println("***STRAN***");
-        System.out.println(stream);
-        return new ByteArrayInputStream(stream.getBytes());
-    }
-
-    public String assignRoom(String encodedTalk,String encodedRoomRef,String givenLastModified) {
+    public String assignRoom(String encodedTalk,String encodedRoomRef,String givenLastModified,UserAccessType userAccessType) {
+        checkWriteAccess(userAccessType);
         String talkUrl = Base64Util.decode(encodedTalk);
         String roomRef = Base64Util.decode(encodedRoomRef);
         StringBuilder formData = new StringBuilder();
@@ -293,14 +307,86 @@ public class EmsCommunicator {
         }
 
         try (InputStream is = postConnection.getInputStream()) {
-            toString(is);
+            CommunicatorHelper.toString(is);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return fetchOneTalk(encodedTalk);
     }
 
-    public String assignSlot(String encodedTalk,String encodedSlotRef,String givenLastModified) {
+    public void addRoomToEvent(String eventid,String roomname,UserAccessType userAccessType) {
+        checkWriteAccess(userAccessType);
+        JsonObject roomtemplate = JsonFactory.jsonObject().put("template", JsonFactory.jsonObject().put("data",
+                JsonFactory.jsonArray().add(
+                        JsonFactory.jsonObject().put("name", "name").put("value", roomname)
+                )));
+
+        StringWriter out = new StringWriter();
+        roomtemplate.toJson(new PrintWriter(out));
+        System.out.println(out);
+
+        String url = eventid + "/rooms";
+        HttpURLConnection postConnection = (HttpURLConnection) openConnection(url, true);
+
+        postConnection.setDoOutput(true);
+        try {
+            postConnection.setRequestMethod("POST");
+            postConnection.setRequestProperty("content-type","application/vnd.collection+json");
+        } catch (ProtocolException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(postConnection.getOutputStream()))) {
+            roomtemplate.toJson(writer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (InputStream is = postConnection.getInputStream()) {
+            String res = CommunicatorHelper.toString(is);
+            System.out.println(res);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void addSlotToEvent(UserAccessType userAccessType) {
+        checkWriteAccess(userAccessType);
+        String url = "http://test.javazone.no/ems/server/events/0e6d98e9-5b06-42e7-b275-6abadb498c81/slots";
+        JsonObject roomtemplate = JsonFactory.jsonObject().put("template", JsonFactory.jsonObject().put("data",
+                JsonFactory.jsonArray()
+                        .add(JsonFactory.jsonObject().put("name", "start").put("value", "2016-09-09T15:00:00Z"))
+                        .add(JsonFactory.jsonObject().put("name", "duration").put("value", new JsonNumber(10)))
+                ));
+
+        HttpURLConnection postConnection = (HttpURLConnection) openConnection(url, true);
+
+        postConnection.setDoOutput(true);
+        try {
+            postConnection.setRequestMethod("POST");
+            postConnection.setRequestProperty("content-type","application/vnd.collection+json");
+        } catch (ProtocolException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(postConnection.getOutputStream()))) {
+            roomtemplate.toJson(writer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (InputStream is = postConnection.getInputStream()) {
+            String res = CommunicatorHelper.toString(is);
+            System.out.println(res);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public String assignSlot(String encodedTalk,String encodedSlotRef,String givenLastModified,UserAccessType userAccessType) {
+        checkWriteAccess(userAccessType);
         String talkUrl = Base64Util.decode(encodedTalk);
         String slotRef = Base64Util.decode(encodedSlotRef);
         StringBuilder formData = new StringBuilder();
@@ -327,6 +413,7 @@ public class EmsCommunicator {
         try {
             postConnection.setRequestMethod("POST");
             postConnection.setRequestProperty("content-type","application/x-www-form-urlencoded");
+
             postConnection.setRequestProperty("if-unmodified-since",lastModified);
         } catch (ProtocolException e) {
             throw new RuntimeException(e);
@@ -344,14 +431,15 @@ public class EmsCommunicator {
         }
 
         try (InputStream is = postConnection.getInputStream()) {
-            toString(is);
+            CommunicatorHelper.toString(is);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return fetchOneTalk(encodedTalk);
     }
 
-    public String publishTalk(String encodedTalkUrl,String givenLastModified) {
+    public String publishTalk(String encodedTalkUrl,String givenLastModified,UserAccessType userAccessType) {
+        checkWriteAccess(userAccessType);
         String talkUrl = Base64Util.decode(encodedTalkUrl);
         HttpURLConnection connection = (HttpURLConnection) openConnection(talkUrl, true);
 
@@ -393,7 +481,7 @@ public class EmsCommunicator {
         }
 
         try (InputStream is = postConnection.getInputStream()) {
-           toString(is);
+           CommunicatorHelper.toString(is);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -410,6 +498,9 @@ public class EmsCommunicator {
             readRoom(item, jsonTalk);
             readSlot(item, jsonTalk);
         }
+        allTalks = JsonArray.fromNodeStream(allTalks.nodeStream()
+                .sorted((n1,n2) -> n1.requiredString("title").compareTo(n2.requiredString("title"))));
+
         return allTalks.toJson();
     }
 
@@ -436,14 +527,15 @@ public class EmsCommunicator {
         int num=items.size();
         for (Item item : items) {
             System.out.println(num--);
-            URLConnection talkConn = openConnection(item.getHref().get().toString(), true);
+            String url = item.getHref().get().toString();
+            URLConnection talkConn = openConnection(url, true);
             Item talkIktem = null;
             try (InputStream talkInpStr = talkConn.getInputStream()) {
                 talkIktem = new CollectionParser().parse(talkInpStr).getFirstItem().get();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            JsonObject jsonTalk = readTalk(talkIktem, talkConn);
+            JsonObject jsonTalk = readTalk(url, talkIktem, talkConn);
             talkArray.add(jsonTalk);
         }
 
@@ -463,11 +555,12 @@ public class EmsCommunicator {
         return events.getItems();
     }
 
-    private JsonObject readTalk(Item item, URLConnection connection) {
+    private JsonObject readTalk(String talkUrl, Item item, URLConnection connection) {
         JsonObject jsonTalk = readItemProperties(item, connection);
 
         readRoom(item, jsonTalk);
         readSlot(item, jsonTalk);
+        readPermalink(item,jsonTalk);
 
         String speakerLink = item.linkByRel("speaker collection").get().getHref().toString();
 
@@ -487,9 +580,22 @@ public class EmsCommunicator {
         }
 
         jsonTalk.put("speakers", jsonSpeakers);
+        java.util.Optional<String> eventSlug = findEventSlug(talkUrl);
+        if (eventSlug.isPresent()) {
+            jsonTalk.put("eventSlug", eventSlug.get());
+        }
         return jsonTalk;
     }
 
+    private java.util.Optional<String> findEventSlug(String talkUrl) {
+        JsonArray evnetnodes = eventJsonNodes();
+        java.util.Optional<String> eventSlug = evnetnodes.nodeStream()
+                .map(jn -> (JsonObject) jn)
+                .filter(jo -> talkUrl.startsWith(Base64Util.decode(jo.requiredString("ref"))))
+                .findAny()
+                .map(jo -> jo.requiredString("slug"));
+        return eventSlug;
+    }
 
 
     private void readRoom(Item item, JsonObject jsonTalk) {
@@ -502,6 +608,15 @@ public class EmsCommunicator {
             room.put("name", roomName);
             room.put("ref", Base64Util.encode(ref));
             jsonTalk.put("room", room);
+        }
+    }
+
+    private void readPermalink(Item item,JsonObject jsonTalk) {
+        Optional<Link> alternate = item.linkByRel("alternate");
+        if (alternate.isSome()) {
+            String link = alternate.get().getHref().toString();
+            String permalink = link.substring(link.lastIndexOf("/")+1);
+            jsonTalk.put("permalink",permalink);
         }
     }
 
@@ -549,36 +664,8 @@ public class EmsCommunicator {
     }
 
 
-
-    private static URLConnection openConnection(String questionUrl, boolean useAuthorization)  {
-        try {
-            URL url = new URL(questionUrl);
-            URLConnection urlConnection = url.openConnection();
-
-            if (useAuthorization) {
-                String authString = Configuration.getEmsUser() + ":" + Configuration.getEmsPassword();
-                String authStringEnc = Base64Util.encode(authString);
-                urlConnection.setRequestProperty("Authorization", "Basic " + authStringEnc);
-            }
-
-            return urlConnection;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static String toString(InputStream inputStream) throws IOException {
-        try (Reader reader = new BufferedReader(new InputStreamReader(inputStream, "utf-8"))) {
-            StringBuilder result = new StringBuilder();
-            int c;
-            while ((c = reader.read()) != -1) {
-                result.append((char)c);
-            }
-            return result.toString();
-        }
-    }
-
-    public String update(String ref, List<String> taglist, String state, String lastModified) {
+    public String update(String ref, List<String> taglist, String state, String lastModified,UserAccessType userAccessType) {
+        checkWriteAccess(userAccessType);
         Property newTag = Property.arrayObject("tags", new ArrayList<>(taglist));
         Property newState = Property.value("state",state);
         return update(ref, lastModified, Arrays.asList(newTag,newState));

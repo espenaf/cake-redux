@@ -155,7 +155,12 @@ angular.module('cakeReduxModule')
                    return;
                 }
                 if (excactMatch) {
-                    if (item.toLowerCase() === filter.toLowerCase()) {
+                    if (filter.endsWith("*")) {
+                        if (item.toLowerCase().startsWith(filter.toLowerCase().substr(0,filter.length-1))) {
+                            found = true;
+                        }
+                    }
+                    else if (item.toLowerCase() === filter.toLowerCase()) {
                         found = true;
                     }
                 } else {
@@ -261,10 +266,13 @@ angular.module('cakeReduxModule')
         var fis = {
             filters : myFilt,
             filterOperators : filterOperators,
+            filteredTalks: [],
+            usedTags: "",
             doFilter : function(talks,allTalks) {
                 var self = this;
                 cookieService.setCookie("cakeFilter",JSON.stringify(self.filters),1);
                 talks.splice(0,talks.length);
+                var allTags = [];
                 _.each(allTalks,function(talk) {
                     var res;
                     if (self.filters.length == 0) {
@@ -274,8 +282,24 @@ angular.module('cakeReduxModule')
                     }
                     if (res.match) {
                         talks.push(talk);
+                        if (_.isArray(talk.tags)) {
+                            talk.tags.forEach(function(at) {
+                                allTags.push(at);
+                            });
+                        }
                     }
                 });
+                this.filteredTalks = talks;
+                var countedTags = _.countBy(allTags);
+                
+                this.usedTags = _.map(_.keys(countedTags).sort(),function(key) {
+                    return {
+                        tagname: key,
+                        count: countedTags[key]
+                    }; 
+                });
+                
+
             },
             injectFilter: function(filterstr) {
                 if (_.isString(filterstr)) {

@@ -1,12 +1,14 @@
 angular.module('cakeReduxModule')
-    .controller('ShowTalkCtrl', ['$scope', '$http', '$routeParams', 'talkList','roomSlotFactory','slotFilterService',
-        function($scope, $http, $routeParams,talkList,roomSlotFactory,slotFilterService) {
+    .controller('ShowTalkCtrl', ['$scope', '$http', '$routeParams', 'talkList','roomSlotFactory','slotFilterService','talkManagerService',
+        function($scope, $http, $routeParams,talkList,roomSlotFactory,slotFilterService,talkManagerService) {
             $scope.filterSlot = slotFilterService.filterValue;
             $scope.roomsSlots = {};
 
 
             var talkRef = $routeParams.talkId;
             $scope.showError = false;
+            $scope.comments = [];
+            $scope.ratings = [];
 
             var updateFromServer = function(data) {
                 if ($scope.aTalk) {
@@ -15,20 +17,25 @@ angular.module('cakeReduxModule')
                     }
                 } else {
                     $scope.aTalk = data;
+                    $scope.comments = $scope.aTalk.comments;
+                    $scope.ratings = $scope.aTalk.ratings;
                 }
                 var talkSpeakers = $scope.aTalk.speakers;
-                _.each(talkSpeakers,function(tspeak) {
-                    tspeak.otherTalks = _.filter(talkList.allTalks,function(talk) {
-                        if (talk.ref == $scope.aTalk.ref) {
-                            return false;
-                        }
-                        var found = false;
-                        if (_.findWhere(talk.speakers,{name:tspeak.name})) {
-                            found = true;
-                        }
-                        return found;
-                    });
 
+                talkManagerService.talkList($scope.aTalk.eventSlug).then(function(data) {
+                    _.each(talkSpeakers, function (tspeak) {
+                        tspeak.otherTalks = _.filter(data.data, function (talk) {
+                            if (talk.ref == $scope.aTalk.ref) {
+                                return false;
+                            }
+                            var found = false;
+                            if (_.findWhere(talk.speakers, {name: tspeak.name})) {
+                                found = true;
+                            }
+                            return found;
+                        });
+
+                    });
                 });
                 if ($scope.aTalk) {
                     document.title = $scope.aTalk.title;
@@ -40,6 +47,11 @@ angular.module('cakeReduxModule')
 
             };
 
+            $scope.toCommaSeperated = function(arr) {
+                return _.reduce(arr,function(a,b) {
+                   return a + ", " + b;
+                });
+            }
 
             $scope.slotFilterUpdated = function() {
                 $scope.roomsSlots.slots = slotFilterService.doFilter($scope.roomsSlots.allSlots);
@@ -189,7 +201,32 @@ angular.module('cakeReduxModule')
                 });
             };
 
+            $scope.addComment = function () {
+                $http({
+                    method: "POST",
+                    url: "data/addComment",
+                    data: {
+                        talkref: talkRef,
+                        comment: $scope.newCommentText
+                    }
+                }).success(function (data) {
+                    $scope.comments = data;
+                    $scope.newCommentText = "";
+                });
+            };
 
+            $scope.ratingClicked = function (givenRating) {
+                $http({
+                    method: "POST",
+                    url: "data/giveRating",
+                    data: {
+                        talkref: talkRef,
+                        rating: givenRating
+                    }
+                }).success(function (data) {
+                    $scope.ratings = data;
+                });
+            }
 
         }]);
 

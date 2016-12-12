@@ -1,4 +1,4 @@
-<div class="cake-margin">
+<div class="container">
     <h1>{{aTalk.title}}</h1>
     <div class="row cake-row cake-margin">
         <a ng-href="{{aTalk.submititLoc}}" target="_newtab">Open in submitit</a>
@@ -75,12 +75,81 @@
         <div class="row cake-row">
             <div class="col-md-1 cake-margin"><strong>Other talks</strong></div>
             <ul class="col-md-10">
-                <li ng-repeat="otalk in speaker.otherTalks"><a ng-href=#/showTalk/{{otalk.ref}}">"{{otalk.title}}</a></li>
+                <li ng-repeat="otalk in speaker.otherTalks"><a ng-href=#/showTalk/{{otalk.ref}}">"{{otalk.title}}</a>({{toCommaSeperated(otalk.tags)}})
+                </li>
             </ul>
         </div>
     </div>
 
+    <p><b>Contact phone:</b> {{aTalk.contactPhone}}</p>
 
+    <h2>Internal comments</h2>
+    <p ng-repeat="acomment in comments"><b>{{acomment.author}}:</b> {{acomment.info}}</p>
+
+    <h2>Internal ratings</h2>
+    <ul>
+        <li ng-repeat="arating in ratings"><b>{{arating.author}}:</b> {{arating.info}}</li>
+    </ul>
+
+    <h2>DevNull feedbacks</h2>
+    <div class="row cake-row">
+        <h3>Online</h3>
+        <table class="table">
+            <tr>
+                <th>Type </th>
+                <th>Session</th>
+                <th>Conference</th>
+            </tr>
+            <tr>
+                <td>Count</td>
+                <td>{{aTalk.userFeedback.session.online.count}}</td>
+                <td>{{aTalk.userFeedback.conference.online.count}}</td>
+            </tr>
+            <tr>
+                <td>Overall</td>
+                <td>{{aTalk.userFeedback.session.online.overall}}</td>
+                <td>{{aTalk.userFeedback.conference.online.overall}}</td>
+            </tr>
+            <tr>
+                <td>Relevance</td>
+                <td>{{aTalk.userFeedback.session.online.relevance}}</td>
+                <td>{{aTalk.userFeedback.conference.online.relevance}}</td>
+            </tr>
+            <tr>
+                <td>Content</td>
+                <td>{{aTalk.userFeedback.session.online.content}}</td>
+                <td>{{aTalk.userFeedback.conference.online.content}}</td>
+            </tr>
+            <tr>
+                <td>Quality</td>
+                <td>{{aTalk.userFeedback.session.online.quality}}</td>
+                <td>{{aTalk.userFeedback.conference.online.quality}}</td>
+            </tr>
+        </table>
+        <h3>Paper</h3>
+        <table class="table">
+            <tr>
+                <th>Type </th>
+                <th>Session</th>
+                <th>Conference</th>
+            </tr>
+            <tr>
+                <td>Green</td>
+                <td>{{aTalk.userFeedback.session.paper.green}}</td>
+                <td>{{aTalk.userFeedback.conference.paper.green}}</td>
+            </tr>
+            <tr>
+                <td>Yellow</td>
+                <td>{{aTalk.userFeedback.session.paper.yellow}}</td>
+                <td>{{aTalk.userFeedback.conference.paper.yellow}}</td>
+            </tr>
+            <tr>
+                <td>Red</td>
+                <td>{{aTalk.userFeedback.session.paper.red}}</td>
+                <td>{{aTalk.userFeedback.conference.paper.red}}</td>
+            </tr>
+        </table>
+    </div>
 
     <h2>Update</h2>
     <div class="well" class="cake-margin-well">
@@ -138,5 +207,30 @@
         </select>
     </div>
     <p><button class="btn btn-danger btn-lg cake-margin" ng-click="updateSlot()">Update slot</button></p>
+    <h2>Add comment</h2>
+    <div class="well">
+        <p>
+            <textarea ng-model="newCommentText" type="text" placeholder="Comment"/>
+            <button class="btn btn-primary" ng-click="addComment()">Add</button>
+        </p>
+    </div>
+    <h2>My rating</h2>
+    <div class="btn-group" data-toggle="buttons">
+        <label class="btn btn-info btn-lg" ng-click="ratingClicked('--')">
+            <input type="radio" name="options" id="option1" autocomplete="off"> --
+        </label>
+        <label class="btn btn-info btn-lg" ng-click="ratingClicked('-')">
+            <input type="radio" name="options" id="option2" autocomplete="off"> -
+        </label>
+        <label class="btn btn-info btn-lg" ng-click="ratingClicked('0')">
+            <input type="radio" name="options" id="option3" autocomplete="off"> 0
+        </label>
+        <label class="btn btn-info btn-lg" ng-click="ratingClicked('+')">
+            <input type="radio" name="options" id="option4" autocomplete="off"> +
+        </label>
+        <label class="btn btn-info btn-lg" ng-click="ratingClicked('++')">
+            <input type="radio" name="options" id="option5" autocomplete="off"> ++
+        </label>
+    </div>
     <h6>Last modified: {{aTalk.lastModified}}</h6>
 </div>

@@ -20,7 +20,7 @@ public class Configuration {
 
     private static String readConfigFile(String filename) {
         try (FileInputStream inputStream = new FileInputStream(filename)) {
-            return EmsCommunicator.toString(inputStream);
+            return CommunicatorHelper.toString(inputStream);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -162,6 +162,28 @@ public class Configuration {
         return readConf("applicationId", "99");
     }
 
+    public static String feedbackStoreFilename() {
+        return readConf("feedbackStoreFilename",null);
+    }
+
     public static String applicationSecret() { return readConf("applicationSecret", "33879936R6Jr47D4Hj5R6p9qT");}
 
+    public static void setProps(Map<String,String> props) {
+        instance.properties = props;
+    }
+
+    public static long emailSleepTime() {
+        return Long.parseLong(readConf("emailSleepTime","5000"));
+    }
+
+    public static String mailFrom() {
+        return readConf("mailFrom", "program@java.no");
+    }
+    public static String mailFromName() {
+        return readConf("mailFromName", "Trondheim Developer Conference program commitee");
+    }
+
+    public static String bcc() {
+        return readConf("bcc", "program-auto@java.no");
+    }
 }

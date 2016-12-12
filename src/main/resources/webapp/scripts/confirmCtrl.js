@@ -3,6 +3,9 @@
     angular.module('openCakeModule', []);
 
     angular.module('cakeOpen',['openCakeModule'])
+        .run(['$rootScope',
+            function($rootScope) {}
+        ])
     .controller('ConfirmCtrl', ['$scope', '$http',
         function($scope, $http) {
             $scope.showMain = false;
@@ -30,7 +33,8 @@
                 var din = $scope.dinner;
                 var postData = {
                     id      : talkId,
-                    dinner  : din
+                    dinner  : din,
+                    contactPhone: $scope.contactPhone
                 };
                 $http({
                     method: "POST",
@@ -51,5 +55,4 @@
 
         }]);
 
-    angular.bootstrap(document,['cakeOpen']);
 }());

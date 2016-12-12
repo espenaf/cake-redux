@@ -57,6 +57,14 @@
             <input type="checkbox" ng-model="showSlot">
         </label>
         <label>
+            Tags
+            <input type="checkbox" ng-model="showTags">
+        </label>
+        <label>
+            Contact phone
+            <input type="checkbox" ng-model="showContactPhone">
+        </label>
+        <label>
             Speakers
             <input type="checkbox" ng-model="showSpeakers">
         </label>
@@ -69,6 +77,10 @@
             <input type="checkbox" ng-model="showSpeakerbio">
         </label>
         <label>
+            Speaker email
+            <input type="checkbox" ng-model="showSpeakerEmail">
+        </label>
+        <label>
             Postcode
             <input type="checkbox" ng-model="showPostcode">
         </label>
@@ -76,8 +88,10 @@
             LastModified
             <input type="checkbox" ng-model="showLastModified">
         </label>
+        <button class="btn btn-default" ng-click="exportCsv()">Export csv</button>
     </div>
 </form>
+<p><pre>{{exportText}}</pre></p>
 <div class="cake-margin" ng-repeat="aTalk in talks" style="page-break-after:always;">
     <h1 ng-show="$parent.showTitle">{{aTalk.title}}</h1>
     <div class="row cake-row" ng-show="$parent.showSummary">
@@ -132,9 +146,18 @@
         <div class="col-md-1 cake-margin"><strong>Slot</strong></div>
         <div class="col-md-10">{{aTalk.slot.start}} - {{aTalk.slot.end}} <small>(yymmdd hhmm-yymmdd hhmm)</small></div>
     </div>
+    <div class="row cake-row" ng-show="$parent.showTags">
+        <div class="col-md-1 cake-margin"><strong>Tags</strong></div>
+        <div class="col-md-10">{{aTalk.tags}}</div>
+    </div>
+    <div class="row cake-row" ng-show="$parent.showContactPhone">
+        <div class="col-md-1 cake-margin"><strong>Contact phone</strong></div>
+        <div class="col-md-10">{{aTalk.contactPhone}}</div>
+    </div>
+
     <div ng-repeat="speaker in aTalk.speakers" ng-show="$parent.showSpeakers">
         <h3 ng-show="$parent.$parent.showSpeakername">{{speaker.name}}</h3>
-        <div class="row cake-row">
+        <div class="row cake-row" ng-show="$parent.$parent.showSpeakerEmail">
             <div class="col-md-1 cake-margin"><strong>Email</strong></div>
             <div class="col-md-10">{{speaker.email}}</div>
         </div>
@@ -147,6 +170,7 @@
             <div class="col-md-10">{{speaker["zip-code"]}}</div>
         </div>
     </div>
+
     <h6 ng-show="$parent.showLastModified">Last modified: {{aTalk.lastModified}}</h6>
     <hr/>
 </div>

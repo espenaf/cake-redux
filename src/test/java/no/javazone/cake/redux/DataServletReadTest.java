@@ -1,12 +1,19 @@
 package no.javazone.cake.redux;
 
+import org.jsonbuddy.JsonFactory;
+import org.jsonbuddy.JsonNode;
+import org.jsonbuddy.JsonObject;
+import org.jsonbuddy.parse.JsonParser;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -17,12 +24,14 @@ public class DataServletReadTest {
     private final HttpServletResponse resp = mock(HttpServletResponse.class);
     private final StringWriter jsonResult = new StringWriter();
     private final EmsCommunicator emsCommunicator = mock(EmsCommunicator.class);
+    private final UserFeedbackCommunicator userFeedbackCommunicator = mock(UserFeedbackCommunicator.class);
 
     @Before
     public void setUp() throws Exception {
         when(req.getMethod()).thenReturn("GET");
         when(resp.getWriter()).thenReturn(new PrintWriter(jsonResult));
         servlet.setEmsCommunicator(emsCommunicator);
+        servlet.setUserFeedbackCommunicator(userFeedbackCommunicator);
     }
 
     @Test
@@ -32,7 +41,7 @@ public class DataServletReadTest {
 
         servlet.service(req, resp);
 
-        verify(resp).setContentType("text/json");
+        verify(resp).setContentType("application/json;charset=UTF-8");
         verify(emsCommunicator).allEvents();
 
         assertThat(jsonResult.toString()).isEqualTo("This is a json");
@@ -52,15 +61,17 @@ public class DataServletReadTest {
 
     @Test
     public void shouldReadSingleTalk() throws Exception {
+        Configuration.setProps(Collections.emptyMap());
         when(req.getPathInfo()).thenReturn("/atalk");
         when(req.getParameter("talkId")).thenReturn("zzz");
-        when(emsCommunicator.fetchOneTalk(anyString())).thenReturn("This is single talk json");
+        JsonObject val = JsonFactory.jsonObject();
+        when(emsCommunicator.oneTalkAsJson(anyString())).thenReturn(val);
 
         servlet.service(req,resp);
 
-        verify(emsCommunicator).fetchOneTalk("zzz");
-        assertThat(jsonResult.toString()).isEqualTo("This is single talk json");
-
+        verify(emsCommunicator).oneTalkAsJson("zzz");
+        JsonNode parsed = JsonParser.parse(jsonResult.toString());
+        assertThat(parsed).isNotNull();
     }
 
 }

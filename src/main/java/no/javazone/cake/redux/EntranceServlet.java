@@ -13,6 +13,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static java.util.Arrays.asList;
 
 public class EntranceServlet extends HttpServlet {
     @Override
@@ -51,7 +55,7 @@ public class EntranceServlet extends HttpServlet {
 
         String googleresp;
         try (InputStream inputStream = urlConnection.getInputStream()) {
-            googleresp = EmsCommunicator.toString(inputStream);
+            googleresp = CommunicatorHelper.toString(inputStream);
         }
 
         String accessToken;
@@ -65,7 +69,7 @@ public class EntranceServlet extends HttpServlet {
         URLConnection inconn = new URL(getStr).openConnection();
         String json;
         try (InputStream is = inconn.getInputStream()) {
-            json = EmsCommunicator.toString(is);
+            json = CommunicatorHelper.toString(is);
         }
 
 
@@ -75,6 +79,9 @@ public class EntranceServlet extends HttpServlet {
         username = userInfo.get("name").asText();
         userEmail = userInfo.get("email").asText();
 
+        // When using not using G+, name can be blank
+        username = getNameFromConfigIfBlank(username, userEmail);
+
         String userid = username + "<" + userEmail + ">";
         if (!haveAccess(userEmail)) {
             resp
@@ -83,8 +90,36 @@ public class EntranceServlet extends HttpServlet {
         }
 
         req.getSession().setAttribute("access_token", userid);
+        req.getSession().setAttribute("username", username);
+        req.getSession().setAttribute("useremail", userEmail);
 
         writeLoginMessage(resp, writer, userid);
+    }
+
+    private String getNameFromConfigIfBlank(String username, String userEmail) {
+        if(username.length() > 0) return username;
+
+        return Stream.of(Configuration.getAutorizedUsers().split(","))
+                .filter(u -> u.contains(userEmail))
+                .map(u -> u.split("<")[0])
+                .findFirst().orElse(username);
+    }
+
+    private boolean haveAccess(String userid) {
+        if (Configuration.getAutorizedUsers().contains(userid)) {
+            return true;
+        }
+        String autorizedUserFile = Configuration.autorizedUserFile();
+        if (autorizedUserFile == null) {
+            return false;
+        }
+        String authUsers;
+        try {
+            authUsers = CommunicatorHelper.toString(new FileInputStream(autorizedUserFile));
+        } catch (IOException e) {
+            return false;
+        }
+        return authUsers.contains(userid);
     }
 
     public static void writeLoginMessage(HttpServletResponse resp, PrintWriter writer, String userid) {
