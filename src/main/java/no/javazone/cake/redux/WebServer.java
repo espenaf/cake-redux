@@ -32,7 +32,7 @@ public class WebServer {
             warFile = args[1];
         }
         System.setProperty("cake-redux-config-file",args[0]);
-        new WebServer(getPort(8082),warFile).start();
+        new WebServer(getPort(8092),warFile).start();
     }
 
 
