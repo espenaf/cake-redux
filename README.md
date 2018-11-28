@@ -18,10 +18,10 @@ cakeLocation=<Where you run this app>
 noAuthMode=<true or false, if true the application has no authentification. Otherwise google is used>
 googleClientId=<Client id to the google oath service>
 googleClientSecret=<Client secret id to the google oath service>
-googleRedirectUrl=http://localhost:8081/entrance
+googleRedirectUrl=http://localhost:8091/entrance
 authorizedUsers=The name and email of the authorized users. Listed as : John Doe<johndoe@gmail.com>,Jane Doe<janedoe@gmail.com>
 submititLocation=The location where submitit is running (used in submitit link on talk detail page). For example http://localhost:8080/talkDetail.html?talkid=
-serverPort=The port where cake redux will run. For example 8081
+serverPort=The port where cake redux will run. For example 8091
 smthost=The address to a smtp server used to send emails. For example 127.0.0.1
 smtpport=The port to the smtp server. For example 25
 ```
@@ -33,7 +33,7 @@ emsEventLocation=<http location to where ems to deployed, and cake can read even
 emsUser=<user in ems system>
 emsPassword=<password in ems system>
 noAuthMode=true
-serverPort=<Pick a free port for example 8081>
+serverPort=<Pick a free port for example 8091>
 ```
 
 From project root:
